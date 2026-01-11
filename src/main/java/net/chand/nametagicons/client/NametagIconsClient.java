@@ -1,6 +1,6 @@
 package net.chand.nametagicons.client;
 
-import com.mojang.blaze3d.platform.InputUtil;
+import net.minecraft.client.util.InputUtil;
 import net.chand.nametagicons.Config;
 import net.chand.nametagicons.NametagIcons;
 import net.fabricmc.api.ClientModInitializer;
@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class NametagIconsClient implements ClientModInitializer {

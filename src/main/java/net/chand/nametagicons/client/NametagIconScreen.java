@@ -4,7 +4,7 @@ import net.chand.nametagicons.Config;
 import net.chand.nametagicons.NametagIcons;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class NametagIconScreen extends Screen {
             cfg.transparentNametagBackground = !cfg.transparentNametagBackground;
             button.setMessage(Text.literal(getBackgroundText(cfg)));
             cfg.save();
-        }));
+        }, btn -> Text.literal(getBackgroundText(cfg))));
 
         y += 24;
 
@@ -40,7 +40,7 @@ public class NametagIconScreen extends Screen {
             cfg.nametagIconsEnabled = !cfg.nametagIconsEnabled;
             button.setMessage(Text.literal(getIconsText(cfg)));
             cfg.save();
-        }));
+        }, btn -> Text.literal(getIconsText(cfg))));
 
         y += 24;
 
@@ -58,8 +58,8 @@ public class NametagIconScreen extends Screen {
                         if (f != null && f.exists()) {
                             cfg.iconPath = f.getAbsolutePath();
                             cfg.save();
-                            // update button label on render thread
-                            this.client.execute(() -> this.chooseIconBtn.setMessage(Text.literal(getChooseText(cfg))));
+                                // update button label on render thread
+                                this.client.execute(() -> this.chooseIconBtn.setMessage(Text.literal(getChooseText(cfg))));
                             NametagIcons.LOGGER.info("Selected icon: {}", cfg.iconPath);
                         }
                     }
@@ -67,11 +67,11 @@ public class NametagIconScreen extends Screen {
                     NametagIcons.LOGGER.warn("Failed to open file chooser", e);
                 }
             });
-        }));
+        }, btn -> Text.literal(getChooseText(cfg))));
 
         y += 24;
 
-        this.addDrawableChild(new ButtonWidget(centerX - 50, y, 100, 20, Text.literal("Done"), button -> this.client.setScreen(parent)));
+        this.addDrawableChild(new ButtonWidget(centerX - 50, y, 100, 20, Text.literal("Done"), button -> this.client.setScreen(parent), btn -> Text.literal("Done")));
     }
 
     private String getBackgroundText(Config cfg) {
@@ -87,10 +87,10 @@ public class NametagIconScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        this.textRenderer.drawWithShadow(matrices, this.title, (this.width - this.textRenderer.getWidth(this.title)) / 2f, 20f, 0xFFFFFF);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
+        context.drawText(this.textRenderer, this.title, (this.width - this.textRenderer.getWidth(this.title)) / 2, 20, 0xFFFFFF);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
